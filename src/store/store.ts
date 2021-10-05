@@ -1,7 +1,10 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { reducer as forecastReducer } from "features/forecast";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    forecast: forecastReducer,
+  },
 });
 
 export type AppDispatch = typeof store.dispatch;
