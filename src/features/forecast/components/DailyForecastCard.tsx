@@ -2,8 +2,8 @@ import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
 import { useMemo } from "react";
-import { useStoreSelector } from "store";
-import { selectUnits } from "../slice";
+import { useStoreDispatch, useStoreSelector } from "store";
+import { selectUnits, setActiveDate } from "../slice";
 
 type DailyForecastCardProps = {
   date: string;
@@ -16,6 +16,8 @@ const DailyForecastCard = ({
   temperature,
   weatherIcon,
 }: DailyForecastCardProps) => {
+  const dispatch = useStoreDispatch();
+  const activeDate = useStoreSelector((state) => state.forecast.activeDate);
   const selectedUnits = useStoreSelector(selectUnits);
 
   const tempSymbol = useMemo(() => {
@@ -27,6 +29,7 @@ const DailyForecastCard = ({
   return (
     <Box>
       <Box
+        onClick={() => dispatch(setActiveDate(date))}
         sx={{
           boxSizing: "border-box",
           borderRadius: "8px",
@@ -34,6 +37,8 @@ const DailyForecastCard = ({
           px: "14px",
           boxShadow:
             "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+          border: activeDate === date ? "2px solid purple" : "none",
+          cursor: "pointer",
         }}
       >
         <Stack>

@@ -14,6 +14,7 @@ type ForecastState = {
   units: Units;
   daily: DailyForecast | null;
   hourly: HourlyForecastsByDay | null;
+  activeDate: string | null;
   error: any;
 };
 
@@ -22,6 +23,7 @@ const initialState: ForecastState = {
   units: "metric",
   daily: null,
   hourly: null,
+  activeDate: null,
   error: null,
 };
 
@@ -44,6 +46,9 @@ const forecastSlice = createSlice({
     setUnits: (state, action: PayloadAction<Units>) => {
       state.units = action.payload;
     },
+    setActiveDate: (state, action: PayloadAction<string>) => {
+      state.activeDate = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -57,6 +62,7 @@ const forecastSlice = createSlice({
 
         state.status = "idle";
         state.hourly = hourlyForecastsByDay;
+        state.activeDate = Object.keys(hourlyForecastsByDay)[0];
         state.daily = dailyForecasts;
       })
       .addCase(getForecast.rejected, (state, action) => {
@@ -69,7 +75,7 @@ const forecastSlice = createSlice({
 export const selectUnits = (state: RootState) => state.forecast.units;
 
 export const {
-  actions: { setUnits },
+  actions: { setUnits, setActiveDate },
 } = forecastSlice;
 
 export const { reducer } = forecastSlice;

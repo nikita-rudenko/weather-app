@@ -1,7 +1,9 @@
+import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import LoadingView from "components/LoadingView";
 import { getForecast } from "features/forecast";
 import DailyForecastSlider from "features/forecast/components/DailyForecastSlider";
+import HourlyForecastBarChart from "features/forecast/components/HourlyForecastBarChart";
 import TempUnitSelector from "features/forecast/components/TempUnitSelector";
 import useDelayedLoading from "hooks/useDelayedLoading";
 import { useEffect } from "react";
@@ -24,12 +26,15 @@ function App() {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        width: "100%",
+        maxWidth: "700px",
+        mx: "auto",
       }}
     >
       {isReady ? (
-        <Box
+        <Stack
+          spacing={4}
           sx={{
-            display: "flex",
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
@@ -40,7 +45,11 @@ function App() {
           {data.status !== "loading" && data.daily && (
             <DailyForecastSlider daily={data.daily} />
           )}
-        </Box>
+
+          <Box sx={{ height: "400px", width: "100%", pt: 5 }}>
+            <HourlyForecastBarChart />
+          </Box>
+        </Stack>
       ) : (
         <LoadingView />
       )}
