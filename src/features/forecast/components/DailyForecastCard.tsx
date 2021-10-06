@@ -1,6 +1,9 @@
 import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
+import { useMemo } from "react";
+import { useStoreSelector } from "store";
+import { selectUnits } from "../slice";
 
 type DailyForecastCardProps = {
   date: string;
@@ -13,6 +16,14 @@ const DailyForecastCard = ({
   temperature,
   weatherIcon,
 }: DailyForecastCardProps) => {
+  const selectedUnits = useStoreSelector(selectUnits);
+
+  const tempSymbol = useMemo(() => {
+    if (selectedUnits === "imperial") return `°F`;
+    if (selectedUnits === "metric") return `°C`;
+    return "";
+  }, [selectedUnits]);
+
   return (
     <Box>
       <Box
@@ -32,7 +43,9 @@ const DailyForecastCard = ({
 
           <Stack direction="row" alignItems="center" justifyContent="center">
             <Typography variant="h4">
-              {temperature || temperature === 0 ? `${temperature}°C` : "-"}
+              {temperature || temperature === 0
+                ? `${temperature}${tempSymbol}`
+                : "-"}
             </Typography>
 
             <img

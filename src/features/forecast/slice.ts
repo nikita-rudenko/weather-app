@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "store";
 
 import { fetchForecast } from "./api";
 import { DailyForecast, HourlyForecastsByDay, Units } from "./types";
@@ -10,6 +11,7 @@ import {
 
 type ForecastState = {
   status: "idle" | "loading" | "failed";
+  units: Units;
   daily: DailyForecast | null;
   hourly: HourlyForecastsByDay | null;
   error: any;
@@ -17,15 +19,17 @@ type ForecastState = {
 
 const initialState: ForecastState = {
   status: "idle",
+  units: "metric",
   daily: null,
   hourly: null,
   error: null,
 };
 
-export const getForecast = createAsyncThunk(
+export const getForecast = createAsyncThunk<any, void, { state: RootState }>(
   "forecast/get5Day3Hour",
-  async (units: Units, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
+      const units = getState().forecast.units;
       return await fetchForecast(units);
     } catch (error) {
       return rejectWithValue({ error: (error as Error).message });
@@ -36,7 +40,11 @@ export const getForecast = createAsyncThunk(
 const forecastSlice = createSlice({
   name: "forecast",
   initialState,
-  reducers: {},
+  reducers: {
+    setUnits: (state, action: PayloadAction<Units>) => {
+      state.units = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getForecast.pending, (state) => {
@@ -57,5 +65,11 @@ const forecastSlice = createSlice({
       });
   },
 });
+
+export const selectUnits = (state: RootState) => state.forecast.units;
+
+export const {
+  actions: { setUnits },
+} = forecastSlice;
 
 export const { reducer } = forecastSlice;
