@@ -33,7 +33,8 @@ export function groupForecastsByDay(
 /**
  * Creates a record of general forecasts for the days.
  * By default, the general forecast is taken from the forecast for midday (`12:00:00`).
- * In the case if today's time is past midday, the general forecast is taken from the nearest one.
+ * If today's time is past midday, the general forecast is taken from the nearest one.
+ * If the midday forecast for the last day is not available yet, the general forecast is taken from the farthest one.
  */
 export function getDailyForecasts(forecastsRecord: HourlyForecastsByDay) {
   return Object.entries(forecastsRecord).reduce(
@@ -44,7 +45,9 @@ export function getDailyForecasts(forecastsRecord: HourlyForecastsByDay) {
       if (isTodayAfternoon) {
         acc[date] = forecasts[0];
       } else {
-        acc[date] = forecasts.find((forecast) => forecast.time === "12:00:00")!;
+        acc[date] =
+          forecasts.find((forecast) => forecast.time === "12:00:00")! ??
+          forecasts[forecasts.length - 1];
       }
 
       return acc;
