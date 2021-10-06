@@ -1,12 +1,15 @@
 import Slider from "react-slick";
 import DailyForecastCard from "./DailyForecastCard";
-import { DailyForecast } from "../types";
+import { useStoreSelector } from "store";
+import { selectDailyForecast } from "../slice";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./styles.css";
 
-function DailyForecastSlider({ daily }: { daily: DailyForecast }) {
+function DailyForecastSlider() {
+  const daily = useStoreSelector(selectDailyForecast);
+
   return (
     <Slider
       infinite={false}

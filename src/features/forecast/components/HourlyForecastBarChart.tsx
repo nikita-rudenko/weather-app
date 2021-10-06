@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useStoreSelector } from "store";
+import { selectForecastActiveDate, selectHourlyForecast } from "../slice";
 
 const HourlyForecastBarChart = () => {
-  const activeDate = useStoreSelector((store) => store.forecast.activeDate)!;
-  const hourly = useStoreSelector((store) => store.forecast.hourly)!;
+  const activeDate = useStoreSelector(selectForecastActiveDate)!;
+  const hourly = useStoreSelector(selectHourlyForecast)!;
 
   const data = useMemo(() => {
     return hourly[activeDate!].map(({ temperature, time }) => {

@@ -12,8 +12,8 @@ import {
 type ForecastState = {
   status: "initial" | "idle" | "loading" | "failed";
   units: Units;
-  daily: DailyForecast | null;
-  hourly: HourlyForecastsByDay | null;
+  daily: DailyForecast;
+  hourly: HourlyForecastsByDay;
   activeDate: string | null;
   error: any;
 };
@@ -21,8 +21,8 @@ type ForecastState = {
 const initialState: ForecastState = {
   status: "initial",
   units: "metric",
-  daily: null,
-  hourly: null,
+  daily: {},
+  hourly: {},
   activeDate: null,
   error: null,
 };
@@ -54,6 +54,7 @@ const forecastSlice = createSlice({
     builder
       .addCase(getForecast.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(getForecast.fulfilled, (state, action) => {
         const forecasts = normalizeForecasts(action.payload.list);
@@ -72,7 +73,13 @@ const forecastSlice = createSlice({
   },
 });
 
+export const selectDailyForecast = (state: RootState) => state.forecast.daily;
+export const selectHourlyForecast = (state: RootState) => state.forecast.hourly;
 export const selectUnits = (state: RootState) => state.forecast.units;
+export const selectForecastFetchStatus = (state: RootState) =>
+  state.forecast.status;
+export const selectForecastActiveDate = (state: RootState) =>
+  state.forecast.activeDate;
 
 export const {
   actions: { setUnits, setActiveDate },

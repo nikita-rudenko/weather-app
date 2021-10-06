@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { useStoreDispatch, useStoreSelector } from "store";
-import { selectUnits, setActiveDate } from "../slice";
+import { selectUnits, setActiveDate, selectForecastActiveDate } from "../slice";
 
 type DailyForecastCardProps = {
   date: string;
@@ -17,7 +17,7 @@ const DailyForecastCard = ({
   weatherIcon,
 }: DailyForecastCardProps) => {
   const dispatch = useStoreDispatch();
-  const activeDate = useStoreSelector((state) => state.forecast.activeDate);
+  const activeDate = useStoreSelector(selectForecastActiveDate);
   const selectedUnits = useStoreSelector(selectUnits);
 
   const tempSymbol = useMemo(() => {

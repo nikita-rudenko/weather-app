@@ -1,23 +1,30 @@
+import { useEffect } from "react";
 import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
-import LoadingView from "components/LoadingView";
-import { getForecast } from "features/forecast";
-import DailyForecastSlider from "features/forecast/components/DailyForecastSlider";
-import HourlyForecastBarChart from "features/forecast/components/HourlyForecastBarChart";
-import TempUnitSelector from "features/forecast/components/TempUnitSelector";
-import useDelayedLoading from "hooks/useDelayedLoading";
-import { useEffect } from "react";
+
 import { useStoreDispatch, useStoreSelector } from "store";
+import LoadingView from "components/LoadingView";
+import {
+  DailyForecastSlider,
+  getForecast,
+  HourlyForecastBarChart,
+  TempUnitSelector,
+} from "features/forecast";
+import useDelayedLoading from "hooks/useDelayedLoading";
+import ErrorView from "components/ErrorView";
+import { selectForecastFetchStatus } from "features/forecast/slice";
 
 function App() {
   const dispatch = useStoreDispatch();
-  const data = useStoreSelector((state) => state.forecast);
+  const status = useStoreSelector(selectForecastFetchStatus);
 
   useEffect(() => {
     dispatch(getForecast());
   }, [dispatch]);
 
-  const isReady = useDelayedLoading(data.status !== "loading");
+  const isReady = useDelayedLoading(
+    status !== "initial" && status !== "loading"
+  );
 
   return (
     <Box
@@ -31,7 +38,13 @@ function App() {
         mx: "auto",
       }}
     >
-      {isReady ? (
+      {!isReady && <LoadingView />}
+
+      {isReady && status === "failed" && (
+        <ErrorView title="Something went wrong" />
+      )}
+
+      {isReady && status !== "failed" && (
         <Stack
           spacing={4}
           sx={{
@@ -41,17 +54,11 @@ function App() {
           }}
         >
           <TempUnitSelector />
-
-          {data.status !== "loading" && data.daily && (
-            <DailyForecastSlider daily={data.daily} />
-          )}
-
+          <DailyForecastSlider />
           <Box sx={{ height: "400px", width: "100%", pt: 5 }}>
             <HourlyForecastBarChart />
           </Box>
         </Stack>
-      ) : (
-        <LoadingView />
       )}
     </Box>
   );
