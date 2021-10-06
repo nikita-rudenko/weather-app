@@ -10,7 +10,7 @@ import {
 } from "./utils";
 
 type ForecastState = {
-  status: "idle" | "loading" | "failed";
+  status: "initial" | "idle" | "loading" | "failed";
   units: Units;
   daily: DailyForecast | null;
   hourly: HourlyForecastsByDay | null;
@@ -18,7 +18,7 @@ type ForecastState = {
 };
 
 const initialState: ForecastState = {
-  status: "idle",
+  status: "initial",
   units: "metric",
   daily: null,
   hourly: null,
