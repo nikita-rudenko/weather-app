@@ -1,11 +1,11 @@
 import { stringify } from "query-string";
 
-import { BASE_URL, DEFAULT_LOCATION, SECRET_KEY } from "./constants";
+import { BASE_URL, DEFAULT_LOCATION } from "./constants";
 import { Units } from "./types";
 
 const defaultQuery = {
   q: DEFAULT_LOCATION,
-  appid: SECRET_KEY,
+  appid: process.env.REACT_APP_WEATHER_PROVIDER_KEY,
   cnt: 40,
 };
 

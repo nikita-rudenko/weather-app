@@ -2,6 +2,10 @@
 
 Since we are programmers and believe in automation, we would like to have an app to check the weather outside so we do not actually have to go outside to see what it's like.
 
+## Environment Variables
+
+Please see the contents `/src/env.d.ts` for required/optional environment variables.
+
 ## Available Scripts
 
 In the project directory, you can run:
